@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function, absolute_import
-import sys
 import acefind
-
-SYS_ENC = sys.getfilesystemencoding()
+from .arg_reader import CmdArgReader
 
 class Boot(object):
 	'''
 	该类负责总控程序的启动逻辑
 	'''
 	def __init__(self,
-		sys_enc=SYS_ENC,
+		arg_reader=CmdArgReader(),
 	):
-		self._sys_enc = sys_enc
+		self._arg_reader = arg_reader
 	
 	def boot(self):
-		win_path = lambda p:p.decode('utf-8').encode(SYS_ENC)
-		argv = [win_path('.')]
-		
-		# 如果外部有参数传进来，则使用外部参数
-		# 否则使用默认固定参数，方便测试
-		if len(sys.argv) > 1:
-			argv = sys.argv[1:]
+		argv = self._arg_reader.load_arg()
 		
 		print(acefind.__name__, acefind.__version__)
 		print(argv)
